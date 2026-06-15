@@ -10,58 +10,58 @@ import (
 	"github.com/btcsuite/btcutil/base58"
 )
 
-func B58_encode(msg []byte) string {
+func B58Encode(msg []byte) string {
 	return base58.Encode(msg)
 }
 
-func B58_decode(msg string) []byte {
+func B58Decode(msg string) []byte {
 	return base58.Decode(msg)
 }
 
-func B64_encode(msg []byte) string {
+func B64Encode(msg []byte) string {
 	encoded := base64.StdEncoding.EncodeToString(msg)
 	return encoded
 }
 
-func B64_decode(msg string) []byte {
+func B64Decode(msg string) []byte {
 	decoded, _ := base64.StdEncoding.DecodeString(msg)
 	return decoded
 }
 
-func Sats_to_btc(sats string) string {
+func SatsToBtc(sats string) string {
 	digits := len(sats)
 	var ans string
 	if digits <= 8 {
-		zero_num := 8 - digits
-		zeros := strings.Repeat("0", zero_num)
+		zeroNum := 8 - digits
+		zeros := strings.Repeat("0", zeroNum)
 		ans = "0." + zeros + sats
 	} else {
-		sats_byte := []byte(sats)
-		big_byte := sats_byte[:len(sats_byte)-8]
-		small_byte := sats_byte[len(sats_byte)-8:]
-		big := string(big_byte)
-		small := string(small_byte)
+		satsByte := []byte(sats)
+		bigByte := satsByte[:len(satsByte)-8]
+		smallByte := satsByte[len(satsByte)-8:]
+		big := string(bigByte)
+		small := string(smallByte)
 		ans = big + "." + small
 	}
-	ans_byte := []byte(ans)
-	prev_length := len(ans_byte)
-	for i := prev_length - 1; ans_byte[i] == byte('0'); i-- {
-		ans_byte = ans_byte[:len(ans_byte)-1]
+	ansByte := []byte(ans)
+	prevLength := len(ansByte)
+	for i := prevLength - 1; ansByte[i] == byte('0'); i-- {
+		ansByte = ansByte[:len(ansByte)-1]
 	}
-	if ans_byte[len(ans_byte)-1] == byte('.') {
-		ans_byte = append(ans_byte, byte('0'))
+	if ansByte[len(ansByte)-1] == byte('.') {
+		ansByte = append(ansByte, byte('0'))
 	}
-	ans = string(ans_byte)
+	ans = string(ansByte)
 	return ans
 }
 
-func Btc_to_sats(btc string) int {
+func BtcToSats(btc string) int {
 	sats := 0
 	if strings.Contains(btc, ".") {
 		numl := strings.Split(btc, ".")
 		big, _ := strconv.Atoi(numl[0])
-		small_str := numl[1] + strings.Repeat("0", 8-len(numl[1]))
-		small, _ := strconv.Atoi(small_str)
+		smallStr := numl[1] + strings.Repeat("0", 8-len(numl[1]))
+		small, _ := strconv.Atoi(smallStr)
 		sats += big * 100000000
 		sats += small
 	} else {
@@ -71,7 +71,7 @@ func Btc_to_sats(btc string) int {
 	return sats
 }
 
-func Int_to_bytes(value int, length int) ([]byte, error) {
+func IntToBytes(value int, length int) ([]byte, error) {
 	if length == 4 {
 		buf := make([]byte, 4)
 		binary.LittleEndian.PutUint32(buf, uint32(value))
@@ -85,7 +85,7 @@ func Int_to_bytes(value int, length int) ([]byte, error) {
 	}
 }
 
-func Bytes_to_int(value []byte, length int) (int, error) {
+func BytesToInt(value []byte, length int) (int, error) {
 	if length == 4 {
 		ans := binary.LittleEndian.Uint32(value)
 		return int(ans), nil
@@ -97,16 +97,16 @@ func Bytes_to_int(value []byte, length int) (int, error) {
 	}
 }
 
-func Int_to_str(i int) string {
+func IntToStr(i int) string {
 	return strconv.Itoa(i)
 }
 
-func Str_to_int(s string) int {
+func StrToInt(s string) int {
 	i, _ := strconv.Atoi(s)
 	return i
 }
 
-func Int_to_compactsize(i int) ([]byte, error) {
+func IntToCompactsize(i int) ([]byte, error) {
 	if i < 253 {
 		return []byte{byte(i)}, nil
 	} else if i < 65536 {

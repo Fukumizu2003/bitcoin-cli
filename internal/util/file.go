@@ -8,29 +8,29 @@ import (
 	"strconv"
 )
 
-func Mkdir_or_nothing(dir string) {
+func MkdirOrNothing(dir string) {
 	os.MkdirAll(dir, 0755)
 }
 
-func Load_accounts() [][]string {
-	Mkdir_or_nothing("ref")
-	f, _ := os.Open(Relative_to_absolute("ref", "keypair.csv"))
+func LoadAccounts() [][]string {
+	MkdirOrNothing("ref")
+	f, _ := os.Open(RelativeToAbsolute("ref", "keypair.csv"))
 	defer f.Close()
 	data, _ := csv.NewReader(f).ReadAll()
 	return data
 }
 
-func Load_destinations() [][]string {
-	Mkdir_or_nothing("ref")
-	f, _ := os.Open(Relative_to_absolute("ref", "destinations.csv"))
+func LoadDestinations() [][]string {
+	MkdirOrNothing("ref")
+	f, _ := os.Open(RelativeToAbsolute("ref", "destinations.csv"))
 	defer f.Close()
 	data, _ := csv.NewReader(f).ReadAll()
 	return data
 }
 
-func Get_address_from_name(name string) (string, error) {
-	accounts := Load_accounts()
-	accounts = append(accounts, Load_destinations()...)
+func GetAddressFromName(name string) (string, error) {
+	accounts := LoadAccounts()
+	accounts = append(accounts, LoadDestinations()...)
 	addr := ""
 	flag := false
 	for _, ac := range accounts {
@@ -46,19 +46,19 @@ func Get_address_from_name(name string) (string, error) {
 	return addr, nil
 }
 
-func Load_utxos() map[string][]map[string]string {
-	Mkdir_or_nothing("ref")
-	data, _ := os.ReadFile(Relative_to_absolute("ref", "utxos.json"))
+func LoadUtxos() map[string][]map[string]string {
+	MkdirOrNothing("ref")
+	data, _ := os.ReadFile(RelativeToAbsolute("ref", "utxos.json"))
 	var bn map[string][]map[string]string
 	json.Unmarshal(data, &bn)
 	return bn
 }
 
-func Get_address_utxos(utxos map[string][]map[string]string, address string) []map[string]string {
+func GetAddressUtxos(utxos map[string][]map[string]string, address string) []map[string]string {
 	return utxos[address]
 }
 
-func Get_utxos_value(utxos map[string][]map[string]string, txid string, vout string) int {
+func GetUtxosValue(utxos map[string][]map[string]string, txid string, vout string) int {
 	value := 0
 	for _, uos := range utxos {
 		for _, uo := range uos {
@@ -70,7 +70,7 @@ func Get_utxos_value(utxos map[string][]map[string]string, txid string, vout str
 	return value
 }
 
-func Get_balance_book(utxos map[string][]map[string]string) map[string]int {
+func GetBalanceBook(utxos map[string][]map[string]string) map[string]int {
 	res := make(map[string]int)
 	for address, utxos := range utxos {
 		balance := 0
@@ -84,8 +84,8 @@ func Get_balance_book(utxos map[string][]map[string]string) map[string]int {
 }
 
 /*
-func Load_utxos_hex() map[string][]map[string]string {
-	bn := Load_utxos()
+func LoadUtxosHex() map[string][]map[string]string {
+	bn := LoadUtxos()
 	res := make(map[string][]map[string]string)
 	for address, _ := range bn {
 		res[address] = []map[string]string{}
@@ -111,24 +111,24 @@ func Load_utxos_hex() map[string][]map[string]string {
 }
 */
 
-func Save_keypair(acname string, address string, priv []byte) {
-	Mkdir_or_nothing("ref")
-	priv_b64 := B64_encode(priv)
-	f, _ := os.OpenFile(Relative_to_absolute("ref", "keypair.csv"), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+func SaveKeypair(acname string, address string, priv []byte) {
+	MkdirOrNothing("ref")
+	privB64 := B64Encode(priv)
+	f, _ := os.OpenFile(RelativeToAbsolute("ref", "keypair.csv"), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	defer f.Close()
 	row := []byte{}
 	row = append(row, []byte(acname)...)
 	row = append(row, byte(','))
 	row = append(row, []byte(address)...)
 	row = append(row, byte(','))
-	row = append(row, []byte(priv_b64)...)
+	row = append(row, []byte(privB64)...)
 	row = append(row, []byte("\n")...)
 	f.Write(row)
 }
 
-func Save_address(acname string, address string) {
-	Mkdir_or_nothing("ref")
-	f, _ := os.OpenFile(Relative_to_absolute("ref", "destinations.csv"), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+func SaveAddress(acname string, address string) {
+	MkdirOrNothing("ref")
+	f, _ := os.OpenFile(RelativeToAbsolute("ref", "destinations.csv"), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	defer f.Close()
 	row := []byte{}
 	row = append(row, []byte(acname)...)
@@ -138,7 +138,7 @@ func Save_address(acname string, address string) {
 	f.Write(row)
 }
 
-func Check_name(acs [][]string, dss [][]string, name string) bool {
+func CheckName(acs [][]string, dss [][]string, name string) bool {
 	for _, ac := range acs {
 		if ac[0] == name {
 			return false

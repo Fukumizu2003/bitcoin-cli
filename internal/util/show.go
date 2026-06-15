@@ -5,7 +5,7 @@ import (
 	"strconv"
 )
 
-func Show_all_address(accounts [][]string) {
+func ShowAllAddress(accounts [][]string) {
 	fmt.Println("")
 	names := []string{}
 	addresses := []string{}
@@ -18,15 +18,15 @@ func Show_all_address(accounts [][]string) {
 	}
 }
 
-func Show_all_balance(accounts [][]string, utxos map[string][]map[string]string) {
+func ShowAllBalance(accounts [][]string, utxos map[string][]map[string]string) {
 	fmt.Println("")
-	ad_name_map := make(map[string]string)
-	balancebook := Get_balance_book(utxos)
+	adNameMap := make(map[string]string)
+	balancebook := GetBalanceBook(utxos)
 	for _, ac := range accounts {
-		ad_name_map[ac[1]] = ac[0]
+		adNameMap[ac[1]] = ac[0]
 	}
 	for address, balance := range balancebook {
-		btc := Sats_to_btc(strconv.Itoa(balance))
-		fmt.Println(ad_name_map[address] + ": " + btc + " BTC")
+		btc := SatsToBtc(strconv.Itoa(balance))
+		fmt.Println(adNameMap[address] + ": " + btc + " BTC")
 	}
 }

@@ -20,23 +20,23 @@ var broadcastCmd = &cobra.Command{
 	Short: "",
 	Long:  ``,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		tx := util.Load_tx()
-		raw_tx := util.Tx_to_bytes(tx)
-		txid := util.Tx_to_txid(tx)
+		tx := util.LoadTx()
+		rawTx := util.TxToBytes(tx)
+		txid := util.TxToTxid(tx)
 		slices.Reverse(txid)
-		fmt.Println(hex.EncodeToString(raw_tx))
+		fmt.Println(hex.EncodeToString(rawTx))
 		var msg []byte
 		var err error
 		if !otherAPI {
-			msg, err = util.Broadcast(raw_tx)
+			msg, err = util.Broadcast(rawTx)
 		} else {
-			msg, err = util.Broadcast2(raw_tx)
+			msg, err = util.Broadcast2(rawTx)
 		}
 		if err != nil {
 			return err
 		}
-		msg_id, _ := hex.DecodeString(string(msg))
-		if slices.Equal(txid, msg_id) {
+		msgId, _ := hex.DecodeString(string(msg))
+		if slices.Equal(txid, msgId) {
 			fmt.Println("SUCCEED: " + hex.EncodeToString(txid))
 			return nil
 		}

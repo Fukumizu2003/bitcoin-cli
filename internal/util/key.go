@@ -30,7 +30,7 @@ func Hash160(msg []byte) []byte {
 	return hasher2.Sum(nil)
 }
 
-func Gen_key(len int) []byte {
+func GenKey(len int) []byte {
 	buf := make([]byte, len)
 	_, err := rand.Read(buf)
 	if err != nil {
@@ -39,48 +39,48 @@ func Gen_key(len int) []byte {
 	return buf
 }
 
-func Bytes_to_wif(priv []byte) string {
+func BytesToWif(priv []byte) string {
 	head := []byte{0x80}
 	var tail byte = 0x01
-	priv_ex := append(append(head, priv...), tail)
-	checksum := Hash256(priv_ex)[0:4]
-	priv_check := append(priv_ex, checksum...)
-	wif := B58_encode(priv_check)
+	privEx := append(append(head, priv...), tail)
+	checksum := Hash256(privEx)[0:4]
+	privCheck := append(privEx, checksum...)
+	wif := B58Encode(privCheck)
 	return wif
 }
 
-func New_keypair() (*btcec.PrivateKey, *btcec.PublicKey) {
+func NewKeypair() (*btcec.PrivateKey, *btcec.PublicKey) {
 	privKey, _ := btcec.NewPrivateKey()
 	pubKey := privKey.PubKey()
 	return privKey, pubKey
 }
 
-func Bytes_to_keypair(priv []byte) (*btcec.PrivateKey, *btcec.PublicKey) {
+func BytesToKeypair(priv []byte) (*btcec.PrivateKey, *btcec.PublicKey) {
 	privKey, pubKey := btcec.PrivKeyFromBytes(priv)
 	return privKey, pubKey
 }
 
-func Pubkey_to_address_b32(pub []byte) string {
-	pub_bytes_hashed := Hash160(pub)
+func PubkeyToAddressB32(pub []byte) string {
+	pubBytesHashed := Hash160(pub)
 	head := []byte{0}
-	data5, err := bech32.ConvertBits(pub_bytes_hashed, 8, 5, true)
+	data5, err := bech32.ConvertBits(pubBytesHashed, 8, 5, true)
 	if err != nil {
 		log.Fatal(err)
 	}
-	pub_bytes_to_encode := append(head, data5...)
-	address_bech32, err := bech32.Encode("bc", pub_bytes_to_encode)
-	return address_bech32
+	pubBytesToEncode := append(head, data5...)
+	addressBech32, err := bech32.Encode("bc", pubBytesToEncode)
+	return addressBech32
 }
 
-func New_priv_address_b32() ([]byte, string) {
-	privkey, pubkey := New_keypair()
+func NewPrivAddressB32() ([]byte, string) {
+	privkey, pubkey := NewKeypair()
 	priv := privkey.Serialize()
 	pub := pubkey.SerializeCompressed()
-	address := Pubkey_to_address_b32(pub)
+	address := PubkeyToAddressB32(pub)
 	return priv, address
 }
 
-func Address_type(address string) (string, error) {
+func AddressType(address string) (string, error) {
 	if address[:4] == "bc1q" {
 		_, _, err := bech32.Decode(address)
 		if err != nil {

@@ -1,0 +1,55 @@
+{
+    "Senders": [
+        "bc1q4cjugyd25x9mhpu95f4j2lznmgjv8dvyz5nsh5"
+    ],
+    "Version": "AgAAAA==",
+    "Marker": "AA==",
+    "Flag": "AQ==",
+    "Inputcount": "Aw==",
+    "Inputs": [
+        {
+            "Txid": "YVARzF9mtMim7+GUXJokgbyc1Naenrt0KygSDkL79LE=",
+            "Vout": "AQAAAA==",
+            "Scriptsigsize": "AA==",
+            "Scriptsig": "",
+            "Sequence": "/////w=="
+        },
+        {
+            "Txid": "0XJrw8CFyPYHRNSm7C4QSL/w4WFh7aqb85KXlwPdZQQ=",
+            "Vout": "AAAAAA==",
+            "Scriptsigsize": "AA==",
+            "Scriptsig": "",
+            "Sequence": "/////w=="
+        },
+        {
+            "Txid": "L1utaad9IZucys2iccCBMc0LpyEPKvpUHWhvFjw65fU=",
+            "Vout": "AAAAAA==",
+            "Scriptsigsize": "AA==",
+            "Scriptsig": "",
+            "Sequence": "/////w=="
+        }
+    ],
+    "Outputcount": "AQ==",
+    "Outputs": [
+        {
+            "Amount": "rIUeAAAAAAA=",
+            "Scriptpubkeysize": "Fg==",
+            "Scriptpubkey": "ABSuJcQRqqGLu4eFomslfFPaJMO1hA=="
+        }
+    ],
+    "Witness": [
+        {
+            "Stackitems": "",
+            "Items": []
+        },
+        {
+            "Stackitems": "",
+            "Items": []
+        },
+        {
+            "Stackitems": "",
+            "Items": []
+        }
+    ],
+    "Locktime": "AAAAAA=="
+}

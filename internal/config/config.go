@@ -16,13 +16,13 @@ type State struct {
 
 type Config struct{}
 
-func Change_main_account(address string) error {
+func ChangeMainAccount(address string) error {
 	var state State
-	util.Mkdir_or_nothing("ref")
+	util.MkdirOrNothing("ref")
 	f, _ := os.ReadFile(filepath.Join("ref", "state.json"))
 	json.Unmarshal(f, &state)
 
-	accounts := util.Load_accounts()
+	accounts := util.LoadAccounts()
 	flag := false
 	for _, ac := range accounts {
 		if address == ac[1] {
@@ -37,13 +37,13 @@ func Change_main_account(address string) error {
 		return errors.New("このアドレスは登録されていません。")
 	}
 
-	state_save, _ := json.MarshalIndent(state, "", "    ")
-	os.WriteFile(filepath.Join("ref", "state.json"), state_save, 0644)
+	stateSave, _ := json.MarshalIndent(state, "", "    ")
+	os.WriteFile(filepath.Join("ref", "state.json"), stateSave, 0644)
 
 	return nil
 }
 
-func Get_main_account() State {
+func GetMainAccount() State {
 	var state State
 	f, _ := os.ReadFile(filepath.Join("ref", "state.json"))
 	json.Unmarshal(f, &state)

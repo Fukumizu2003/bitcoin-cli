@@ -4,7 +4,7 @@ import (
 	"errors"
 )
 
-func Get_max_index(sl []int) (int, int) {
+func GetMaxIndex(sl []int) (int, int) {
 	max := sl[0]
 	ci := 0
 	for i, num := range sl {
@@ -16,21 +16,21 @@ func Get_max_index(sl []int) (int, int) {
 	return max, ci
 }
 
-func Get_sorted_indexes(sl []int) []int {
+func GetSortedIndexes(sl []int) []int {
 	slcopy := make([]int, len(sl))
 	copy(slcopy, sl)
-	min_int := -int(^uint(0)>>1) - 1
+	minInt := -int(^uint(0)>>1) - 1
 	res := []int{}
 	length := len(slcopy)
 	for i := 0; i < length; i++ {
-		_, idx := Get_max_index(slcopy)
+		_, idx := GetMaxIndex(slcopy)
 		res = append(res, idx)
-		slcopy[idx] = min_int
+		slcopy[idx] = minInt
 	}
 	return res
 }
 
-func Get_element_sum(sl []int, inds []int) []int {
+func GetElementSum(sl []int, inds []int) []int {
 	sum := 0
 	res := []int{}
 	for _, ind := range inds {
@@ -40,23 +40,23 @@ func Get_element_sum(sl []int, inds []int) []int {
 	return res
 }
 
-func Necessary_inputs(utxos []map[string]string, amount int) ([]map[string]string, error) {
+func NecessaryInputs(utxos []map[string]string, amount int) ([]map[string]string, error) {
 	res := make([]map[string]string, 0)
 	values := []int{}
 	for _, uo := range utxos {
-		values = append(values, Str_to_int(uo["value"]))
+		values = append(values, StrToInt(uo["value"]))
 	}
-	values_index_desc := Get_sorted_indexes(values)
-	necessary_indexes := []int{}
+	valuesIndexDesc := GetSortedIndexes(values)
+	necessaryIndexes := []int{}
 	total := 0
-	for i := 0; total < amount && i < len(values_index_desc); i++ {
-		total += values[values_index_desc[i]]
-		necessary_indexes = append(necessary_indexes, values_index_desc[i])
+	for i := 0; total < amount && i < len(valuesIndexDesc); i++ {
+		total += values[valuesIndexDesc[i]]
+		necessaryIndexes = append(necessaryIndexes, valuesIndexDesc[i])
 	}
 	if total < amount {
 		return nil, errors.New("残高が不足しています。")
 	}
-	for _, i := range necessary_indexes {
+	for _, i := range necessaryIndexes {
 		res = append(res, utxos[i])
 	}
 	return res, nil

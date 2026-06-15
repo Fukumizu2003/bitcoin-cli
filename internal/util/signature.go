@@ -11,7 +11,7 @@ import (
 )
 
 func Scriptpubkey(address string) ([]byte, error) {
-	adtype, _ := Address_type(address)
+	adtype, _ := AddressType(address)
 	if adtype == "p2pkh" {
 		decoded, _, err := base58.CheckDecode(address)
 		if err != nil {
@@ -33,32 +33,32 @@ func Scriptpubkey(address string) ([]byte, error) {
 	}
 }
 
-func Make_signature_from_bytes(priv []byte, msg []byte) []byte {
-	privkey, _ := Bytes_to_keypair(priv)
+func MakeSignatureFromBytes(priv []byte, msg []byte) []byte {
+	privkey, _ := BytesToKeypair(priv)
 	hash := Hash256(msg)
 	signature := ecdsa.Sign(privkey, hash)
 	return append(signature.Serialize(), 0x01)
 }
 
-func get_pubkey(priv []byte) []byte {
-	_, pubkey := Bytes_to_keypair(priv)
+func getPubkey(priv []byte) []byte {
+	_, pubkey := BytesToKeypair(priv)
 	return pubkey.SerializeCompressed()
 }
 
-func Make_signature_for_segwit_input(tx Tx, priv []byte, inputindex int) ([]byte, error) {
-	pub := get_pubkey(priv)
+func MakeSignatureForSegwitInput(tx Tx, priv []byte, inputindex int) ([]byte, error) {
+	pub := getPubkey(priv)
 
 	input := tx.Inputs[inputindex]
 	txid := input.Txid
 	vout := input.Vout
 	sequence := input.Sequence
 
-	utxo_data := Load_utxos()
-	balance_int := Get_utxos_value(utxo_data, hex.EncodeToString(txid), hex.EncodeToString(vout))
-	if balance_int == 0 {
+	utxoData := LoadUtxos()
+	balanceInt := GetUtxosValue(utxoData, hex.EncodeToString(txid), hex.EncodeToString(vout))
+	if balanceInt == 0 {
 		return nil, errors.New("Failed to get utxo data.")
 	}
-	balance, _ := Int_to_bytes(balance_int, 8)
+	balance, _ := IntToBytes(balanceInt, 8)
 	msg := []byte{}
 	msg = append(msg, tx.Version...)
 	prehashprevouts := []byte{}
@@ -92,15 +92,15 @@ func Make_signature_for_segwit_input(tx Tx, priv []byte, inputindex int) ([]byte
 
 	msg = append(msg, tx.Locktime...)
 	msg = append(msg, []byte{0x01, 0x00, 0x00, 0x00}...)
-	signature := Make_signature_from_bytes(priv, msg)
+	signature := MakeSignatureFromBytes(priv, msg)
 	return signature, nil
 }
 
-func Get_signed_tx(tx Tx, priv []byte) Tx {
+func GetSignedTx(tx Tx, priv []byte) Tx {
 	signatures := [][]byte{}
-	pubkey := get_pubkey(priv)
+	pubkey := getPubkey(priv)
 	for i := 0; i < int(tx.Inputcount[0]); i++ {
-		sign, _ := Make_signature_for_segwit_input(tx, priv, i)
+		sign, _ := MakeSignatureForSegwitInput(tx, priv, i)
 		signatures = append(signatures, sign)
 	}
 	for i, signature := range signatures {

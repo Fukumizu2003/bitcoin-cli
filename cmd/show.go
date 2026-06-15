@@ -11,8 +11,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var show_balance bool
-var show_address bool
+var showBalance bool
+var showAddress bool
 var all bool
 
 // showCmd represents the show command
@@ -21,34 +21,34 @@ var showCmd = &cobra.Command{
 	Short: "",
 	Long:  ``,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		if show_balance {
-			err := util.Refresh_utxos()
+		if showBalance {
+			err := util.RefreshUtxos()
 			if err != nil {
 				return err
 			}
 		}
 		if all {
-			if show_address {
-				accounts := util.Load_accounts()
-				accounts = append(accounts, util.Load_destinations()...)
-				util.Show_all_address(accounts)
-			} else if show_balance {
-				accounts := util.Load_accounts()
-				utxos := util.Load_utxos()
-				util.Show_all_balance(accounts, utxos)
+			if showAddress {
+				accounts := util.LoadAccounts()
+				accounts = append(accounts, util.LoadDestinations()...)
+				util.ShowAllAddress(accounts)
+			} else if showBalance {
+				accounts := util.LoadAccounts()
+				utxos := util.LoadUtxos()
+				util.ShowAllBalance(accounts, utxos)
 			} else {
 				return fmt.Errorf("フラグを指定してください。\nアドレス表示： -a\n残高表示： -b")
 			}
 		} else {
-			if show_address {
-				ac := config.Get_main_account()
+			if showAddress {
+				ac := config.GetMainAccount()
 				fmt.Println(ac.Address)
 				return util.ShowQRCode(ac.Address)
-			} else if show_balance {
-				utxos := util.Load_utxos()
-				ac := config.Get_main_account()
-				balances := util.Get_balance_book(utxos)
-				fmt.Println(util.Sats_to_btc(util.Int_to_str(balances[ac.Address])) + " BTC")
+			} else if showBalance {
+				utxos := util.LoadUtxos()
+				ac := config.GetMainAccount()
+				balances := util.GetBalanceBook(utxos)
+				fmt.Println(util.SatsToBtc(util.IntToStr(balances[ac.Address])) + " BTC")
 			} else {
 				return fmt.Errorf("フラグを指定してください。\nアドレス表示： -a\n残高表示： -b")
 			}
@@ -59,7 +59,7 @@ var showCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(showCmd)
-	showCmd.Flags().BoolVarP(&show_balance, "balance", "b", false, "アカウントの残高を表示")
-	showCmd.Flags().BoolVarP(&show_address, "address", "a", false, "アカウントのアドレスを表示")
+	showCmd.Flags().BoolVarP(&showBalance, "balance", "b", false, "アカウントの残高を表示")
+	showCmd.Flags().BoolVarP(&showAddress, "address", "a", false, "アカウントのアドレスを表示")
 	showCmd.Flags().BoolVar(&all, "all", false, "すべてのアカウントの情報を見たい場合にセット")
 }

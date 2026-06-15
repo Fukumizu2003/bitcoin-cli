@@ -13,7 +13,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var delete_name string
+var deleteName string
 
 // deleteCmd represents the delete command
 var deleteCmd = &cobra.Command{
@@ -21,25 +21,25 @@ var deleteCmd = &cobra.Command{
 	Short: "",
 	Long:  ``,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		if delete_name == "" {
+		if deleteName == "" {
 			return fmt.Errorf("削除するアカウント名を-nフラグで指定してください。")
 		}
-		accounts := util.Load_accounts()
-		destinations := util.Load_destinations()
-		new_accounts := [][]string{}
-		new_destinations := [][]string{}
+		accounts := util.LoadAccounts()
+		destinations := util.LoadDestinations()
+		newAccounts := [][]string{}
+		newDestinations := [][]string{}
 		acflag := false
 		deflag := false
 		for _, ac := range accounts {
-			if ac[0] != delete_name {
-				new_accounts = append(new_accounts, ac)
+			if ac[0] != deleteName {
+				newAccounts = append(newAccounts, ac)
 			} else {
 				acflag = true
 			}
 		}
 		for _, ds := range destinations {
-			if ds[0] != delete_name {
-				new_destinations = append(new_destinations, ds)
+			if ds[0] != deleteName {
+				newDestinations = append(newDestinations, ds)
 			} else {
 				deflag = true
 			}
@@ -50,11 +50,11 @@ var deleteCmd = &cobra.Command{
 		var buf bytes.Buffer
 		writer := csv.NewWriter(&buf)
 		if acflag {
-			writer.WriteAll(new_accounts)
-			os.WriteFile(util.Relative_to_absolute("ref", "keypair.csv"), buf.Bytes(), 0644)
+			writer.WriteAll(newAccounts)
+			os.WriteFile(util.RelativeToAbsolute("ref", "keypair.csv"), buf.Bytes(), 0644)
 		} else if deflag {
-			writer.WriteAll(new_destinations)
-			os.WriteFile(util.Relative_to_absolute("ref", "destinations.csv"), buf.Bytes(), 0644)
+			writer.WriteAll(newDestinations)
+			os.WriteFile(util.RelativeToAbsolute("ref", "destinations.csv"), buf.Bytes(), 0644)
 		}
 		return nil
 	},
@@ -63,7 +63,7 @@ var deleteCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(deleteCmd)
 
-	deleteCmd.Flags().StringVarP(&delete_name, "name", "n", "", "削除するアカウントの名前を指定")
+	deleteCmd.Flags().StringVarP(&deleteName, "name", "n", "", "削除するアカウントの名前を指定")
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command

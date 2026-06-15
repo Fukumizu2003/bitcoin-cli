@@ -6,21 +6,21 @@ import (
 	//"runtime"
 )
 
-func Get_exe_dir_path() string {
+func GetExeDirPath() string {
 	exe, _ := os.Executable()
 	exe, _ = filepath.EvalSymlinks(exe)
 	dir := filepath.Dir(exe)
 	return dir
 }
 
-func Relative_to_absolute(rpath ...string) string {
-	dir := Get_exe_dir_path()
+func RelativeToAbsolute(rpath ...string) string {
+	dir := GetExeDirPath()
 	apath := filepath.Join(append([]string{dir}, rpath...)...)
 	return apath
 }
 
 /*
-func Get_config_dir() string {
+func GetConfigDir() string {
 	app := "bitcoin-cli"
 	home, _ := os.UserHomeDir()
 

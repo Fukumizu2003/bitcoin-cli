@@ -22,11 +22,11 @@ var setCmd = &cobra.Command{
 		if acname == "" {
 			return fmt.Errorf("アカウント名を-nで指定してください。")
 		}
-		address, err := util.Get_address_from_name(acname)
+		address, err := util.GetAddressFromName(acname)
 		if err != nil {
 			return fmt.Errorf("このアカウント名は存在しません。")
 		}
-		config.Change_main_account(address)
+		config.ChangeMainAccount(address)
 		return nil
 	},
 }

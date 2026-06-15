@@ -44,7 +44,7 @@ type Balance struct {
 	Value []byte
 }
 
-func New_tx() Tx {
+func NewTx() Tx {
 	tx := Tx{
 		Senders:     make([]string, 0, 2),
 		Version:     make([]byte, 0, 4),
@@ -60,7 +60,7 @@ func New_tx() Tx {
 	return tx
 }
 
-func New_input() Input {
+func NewInput() Input {
 	inp := Input{
 		Txid:          make([]byte, 0, 32),
 		Vout:          make([]byte, 0, 4),
@@ -71,7 +71,7 @@ func New_input() Input {
 	return inp
 }
 
-func New_output() Output {
+func NewOutput() Output {
 	oup := Output{
 		Amount:           make([]byte, 0, 8),
 		Scriptpubkeysize: make([]byte, 0, 1),
@@ -80,7 +80,7 @@ func New_output() Output {
 	return oup
 }
 
-func New_witness() Witness {
+func NewWitness() Witness {
 	items := make([][]byte, 0, 4)
 	wit := Witness{
 		Stackitems: make([]byte, 0, 1),
@@ -89,17 +89,17 @@ func New_witness() Witness {
 	return wit
 }
 
-func Save_tx(tx Tx) {
-	Mkdir_or_nothing("temp")
+func SaveTx(tx Tx) {
+	MkdirOrNothing("temp")
 	data, err := json.MarshalIndent(tx, "", "    ")
 	if err != nil {
 		fmt.Println(err)
 	}
-	os.WriteFile(Relative_to_absolute("temp", "transaction.json"), data, 0644)
+	os.WriteFile(RelativeToAbsolute("temp", "transaction.json"), data, 0644)
 }
 
-func Load_tx() Tx {
-	data, _ := os.ReadFile(Relative_to_absolute("temp", "transaction.json"))
+func LoadTx() Tx {
+	data, _ := os.ReadFile(RelativeToAbsolute("temp", "transaction.json"))
 	var tx Tx
 	json.Unmarshal(data, &tx)
 	return tx
@@ -107,14 +107,14 @@ func Load_tx() Tx {
 
 /*
 
-func Sort_input(inputs []map[string]string) []map[string]string {
+func SortInput(inputs []map[string]string) []map[string]string {
 	res := []map[string]string{}
 	values := []int{}
 	for _, input := range inputs {
-		values = append(values, Str_to_int(input["value"]))
+		values = append(values, StrToInt(input["value"]))
 	}
-	sorted_indexes := Get_sorted_indexes(values)
-	for _, idx := range sorted_indexes {
+	sortedIndexes := GetSortedIndexes(values)
+	for _, idx := range sortedIndexes {
 		res = append(res, inputs[idx])
 	}
 	return res
@@ -122,8 +122,8 @@ func Sort_input(inputs []map[string]string) []map[string]string {
 
 */
 
-func Utxo_to_input(utxo map[string]string) Input {
-	input := New_input()
+func UtxoToInput(utxo map[string]string) Input {
+	input := NewInput()
 	input.Txid, _ = hex.DecodeString(utxo["txid"])
 	input.Vout, _ = hex.DecodeString(utxo["vout"])
 	input.Scriptsigsize = []byte{0x00}
@@ -131,15 +131,15 @@ func Utxo_to_input(utxo map[string]string) Input {
 	return input
 }
 
-func Total_of_utxos(utxos []map[string]string) int {
+func TotalOfUtxos(utxos []map[string]string) int {
 	total := 0
 	for _, ut := range utxos {
-		total += Str_to_int(ut["value"])
+		total += StrToInt(ut["value"])
 	}
 	return total
 }
 
-func Tx_to_bytes(tx Tx) []byte {
+func TxToBytes(tx Tx) []byte {
 	msg := []byte{}
 	msg = append(msg, tx.Version...)
 	msg = append(msg, tx.Marker...)
@@ -168,7 +168,7 @@ func Tx_to_bytes(tx Tx) []byte {
 	return msg
 }
 
-func Tx_to_txid(tx Tx) []byte {
+func TxToTxid(tx Tx) []byte {
 	msg := []byte{}
 	msg = append(msg, tx.Version...)
 	msg = append(msg, tx.Inputcount...)
