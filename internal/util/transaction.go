@@ -194,3 +194,14 @@ func TxToTxid(tx Tx) []byte {
 	msg = append(msg, tx.Locktime...)
 	return Hash256(msg)
 }
+
+func CalcVB(tx *Tx) float64 {
+	base := 10.5
+	for range tx.Inputs {
+		base += 68.25
+	}
+	for range tx.Outputs {
+		base += 31
+	}
+	return base
+}

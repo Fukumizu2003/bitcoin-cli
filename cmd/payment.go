@@ -117,7 +117,10 @@ var paymentCmd = &cobra.Command{
 		for _, oup := range tx.Outputs {
 			feeConfirm -= int(binary.LittleEndian.Uint64(oup.Amount))
 		}
-		fmt.Println("Fee: " + strconv.Itoa(feeConfirm) + " sats")
+		vb := util.CalcVB(&tx)
+		satsvb := float64(feeConfirm) / vb
+		fmt.Println("Tx size: " + strconv.FormatFloat(vb, 'f', 2, 64) + " vB")
+		fmt.Println("Fee:     " + strconv.Itoa(feeConfirm) + " sats (" + strconv.FormatFloat(satsvb, 'f', 2, 64) + " sats/vB)")
 		tx.Locktime = []byte{0x00, 0x00, 0x00, 0x00}
 		util.SaveTx(tx)
 		return nil
