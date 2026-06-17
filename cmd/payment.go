@@ -21,9 +21,9 @@ var amountStr string
 var destination string
 var feeStr string
 
-// makeCmd represents the make command
-var makeCmd = &cobra.Command{
-	Use:   "make",
+// paymentCmd represents the payment command
+var paymentCmd = &cobra.Command{
+	Use:   "payment",
 	Short: "トランザクションを設定します。署名は行わないのでオンライン状態で大丈夫です。",
 	Long:  ``,
 	RunE: func(cmd *cobra.Command, args []string) error {
@@ -125,10 +125,10 @@ var makeCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(makeCmd)
+	rootCmd.AddCommand(paymentCmd)
 
-	makeCmd.Flags().StringVarP(&versionStr, "version", "v", "2", "")
-	makeCmd.Flags().StringVarP(&amountStr, "amount", "a", "", "着金額を指定。複数指定する場合はアドレスに対応した順序で半角スペース区切りで並べる。")
-	makeCmd.Flags().StringVarP(&destination, "destination", "d", "", "送信先アドレスを指定。複数指定する場合は半角スペース区切りで並べる。")
-	makeCmd.Flags().StringVarP(&feeStr, "fee", "f", "500", "Transaction fee by sats")
+	paymentCmd.Flags().StringVarP(&versionStr, "version", "v", "2", "")
+	paymentCmd.Flags().StringVarP(&amountStr, "amount", "a", "", "着金額を指定。複数指定する場合はアドレスに対応した順序で半角スペース区切りで並べる。")
+	paymentCmd.Flags().StringVarP(&destination, "destination", "d", "", "送信先アドレスを指定。複数指定する場合は半角スペース区切りで並べる。")
+	paymentCmd.Flags().StringVarP(&feeStr, "fee", "f", "500", "Transaction fee by sats")
 }
