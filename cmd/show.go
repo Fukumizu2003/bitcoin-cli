@@ -41,12 +41,12 @@ var showCmd = &cobra.Command{
 			}
 		} else {
 			if showAddress {
-				ac := config.GetMainAccount()
+				ac := config.GetAccount()
 				fmt.Println(ac.Address)
 				return util.ShowQRCode(ac.Address)
 			} else if showBalance {
 				utxos := util.LoadUtxos()
-				ac := config.GetMainAccount()
+				ac := config.GetAccount()
 				balances := util.GetBalanceBook(utxos)
 				fmt.Println(util.SatsToBtc(util.IntToStr(balances[ac.Address])) + " BTC")
 			} else {

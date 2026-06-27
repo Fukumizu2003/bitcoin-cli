@@ -28,6 +28,14 @@ func Scriptpubkey(address string) ([]byte, error) {
 		}
 		converted, _ := bech32.ConvertBits(decoded[1:], 5, 8, false)
 		return append(head, converted...), nil
+	} else if adtype == "p2sh" {
+		dec, _, err := base58.CheckDecode(address)
+		if err != nil {
+			return nil, err
+		}
+		head := []byte{0xa9, 0x14}
+		tail := []byte{0x87}
+		return append(append(head, dec...), tail...), nil
 	} else {
 		return nil, errors.New("未対応のアドレス形式")
 	}

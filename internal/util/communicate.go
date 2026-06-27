@@ -83,6 +83,7 @@ func Broadcast(raw []byte) ([]byte, error) {
 	}
 	defer resp.Body.Close()
 	body, _ := io.ReadAll(resp.Body)
+	SaveResp(body)
 	return body, err
 }
 
@@ -103,5 +104,6 @@ func Broadcast2(raw []byte) ([]byte, error) {
 	}
 	defer resp.Body.Close()
 	body, _ := io.ReadAll(resp.Body)
+	SaveResp(body)
 	return body, err
 }

@@ -185,12 +185,6 @@ func TxToTxid(tx Tx) []byte {
 		msg = append(msg, output.Scriptpubkeysize...)
 		msg = append(msg, output.Scriptpubkey...)
 	}
-	for _, witness := range tx.Witness {
-		msg = append(msg, witness.Stackitems...)
-		for _, item := range witness.Items {
-			msg = append(msg, item...)
-		}
-	}
 	msg = append(msg, tx.Locktime...)
 	return Hash256(msg)
 }

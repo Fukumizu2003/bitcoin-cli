@@ -89,6 +89,10 @@ var registerCmd = &cobra.Command{
 			util.SaveKeypair(setName, address, privkeyCr)
 		} else {
 			if setAddress != "" {
+				if !util.IsValidAddress(setAddress) {
+					fmt.Println("指定のアドレスは無効、もしくは未対応の形式です。")
+					return
+				}
 				util.SaveAddress(setName, setAddress)
 			} else {
 				fmt.Println("-aフラグによりアドレスを指定してください。")

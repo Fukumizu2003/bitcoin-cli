@@ -21,10 +21,10 @@ var broadcastCmd = &cobra.Command{
 	Long:  ``,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		tx := util.LoadTx()
+		txidb := util.TxToTxid(tx)
+		slices.Reverse(txidb)
+		txid := hex.EncodeToString(txidb)
 		rawTx := util.TxToBytes(tx)
-		txid := util.TxToTxid(tx)
-		slices.Reverse(txid)
-		fmt.Println(hex.EncodeToString(rawTx))
 		var msg []byte
 		var err error
 		if !otherAPI {
@@ -35,13 +35,11 @@ var broadcastCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		msgId, _ := hex.DecodeString(string(msg))
-		if slices.Equal(txid, msgId) {
-			fmt.Println("SUCCEED: " + hex.EncodeToString(txid))
+		if string(msg) == txid {
+			fmt.Println("SUCCEED: " + string(msg))
 			return nil
 		}
-		fmt.Println("Something went wrong.")
-		fmt.Println(string(msg))
+		fmt.Println("API response: " + string(msg))
 		return nil
 	},
 }

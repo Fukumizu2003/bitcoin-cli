@@ -93,6 +93,21 @@ func AddressType(address string) (string, error) {
 			return "", err
 		}
 		return "p2pkh", nil
+	} else if address[0] == '3' {
+		_, _, err := base58.CheckDecode(address)
+		if err != nil {
+			return "", err
+		}
+		return "p2sh", nil
 	}
 	return "", errors.New("このアドレス形式には対応していません。")
+}
+
+func IsValidAddress(addr string) bool {
+	_, err := AddressType(addr)
+	if err != nil {
+		return false
+	} else {
+		return true
+	}
 }

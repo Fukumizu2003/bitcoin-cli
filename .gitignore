@@ -2,3 +2,4 @@ ref/destinations.csv
 ref/keypair.csv
 ref/utxos.json
 temp/transaction.json
+.env

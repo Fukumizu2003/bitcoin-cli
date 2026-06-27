@@ -29,7 +29,7 @@ var paymentCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 
 		tx := util.NewTx()
-		ac := config.GetMainAccount()
+		ac := config.GetAccount()
 		tx.Senders = append(tx.Senders, ac.Address)
 
 		if destination == "" {
@@ -44,8 +44,14 @@ var paymentCmd = &cobra.Command{
 		for _, dest := range dests {
 			addr, err := util.GetAddressFromName(dest)
 			if err != nil {
+				if !util.IsValidAddress(dest) {
+					return fmt.Errorf("指定したアドレスの形式が誤り、もしくは未対応の形式です。")
+				}
 				destinations = append(destinations, dest)
 			} else {
+				if !util.IsValidAddress(addr) {
+					return fmt.Errorf("無効なアドレスが登録されています。")
+				}
 				destinations = append(destinations, addr)
 			}
 		}
@@ -132,6 +138,6 @@ func init() {
 
 	paymentCmd.Flags().StringVarP(&versionStr, "version", "v", "2", "")
 	paymentCmd.Flags().StringVarP(&amountStr, "amount", "a", "", "着金額を指定。複数指定する場合はアドレスに対応した順序で半角スペース区切りで並べる。")
-	paymentCmd.Flags().StringVarP(&destination, "destination", "d", "", "送信先アドレスを指定。複数指定する場合は半角スペース区切りで並べる。")
+	paymentCmd.Flags().StringVarP(&destination, "destination", "d", "", "送信先を指定。（登録名もしくはアドレス）複数指定する場合は半角スペース区切りで並べる。")
 	paymentCmd.Flags().StringVarP(&feeStr, "fee", "f", "500", "Transaction fee by sats")
 }

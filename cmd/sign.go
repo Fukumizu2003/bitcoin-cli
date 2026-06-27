@@ -24,7 +24,7 @@ var signCmd = &cobra.Command{
 			return fmt.Errorf("パスワードを-pにより入力してください。")
 		}
 		tx := util.LoadTx()
-		selfAc := config.GetMainAccount()
+		selfAc := config.GetAccount()
 		privkeyCrB64 := selfAc.Key
 		privkeyCr := util.B64Decode(privkeyCrB64)
 		privkey := util.AesDecrypt(privkeyCr, []byte(password))
@@ -32,7 +32,7 @@ var signCmd = &cobra.Command{
 		rawtx := util.TxToBytes(tx)
 		fmt.Println("Raw tx hex:")
 		fmt.Println(hex.EncodeToString(rawtx))
-		fmt.Println("\nTxID (Big endian): " + hex.EncodeToString(util.Hash256(rawtx)))
+		fmt.Println("\nTxID (Big endian): " + hex.EncodeToString(util.TxToTxid(tx)))
 		util.SaveTx(tx)
 		return nil
 	},

@@ -5,7 +5,6 @@ package cmd
 
 import (
 	"bitcoin-cli/internal/config"
-	"bitcoin-cli/internal/util"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -18,16 +17,18 @@ var setCmd = &cobra.Command{
 	Use:   "set",
 	Short: "メインアカウントをセットします。",
 	Long:  ``,
-	RunE: func(cmd *cobra.Command, args []string) error {
+	Run: func(cmd *cobra.Command, args []string) {
 		if acname == "" {
-			return fmt.Errorf("アカウント名を-nで指定してください。")
+			fmt.Println("アカウント名を-nで指定してください。")
+			return
 		}
-		address, err := util.GetAddressFromName(acname)
-		if err != nil {
-			return fmt.Errorf("このアカウント名は存在しません。")
+
+		st, er := config.SetAccount(acname)
+		if er != nil {
+			fmt.Println(er)
+			return
 		}
-		config.ChangeMainAccount(address)
-		return nil
+		config.SaveConfig(*st)
 	},
 }
 

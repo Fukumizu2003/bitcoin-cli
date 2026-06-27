@@ -138,6 +138,11 @@ func SaveAddress(acname string, address string) {
 	f.Write(row)
 }
 
+func SaveResp(data []byte) {
+	MkdirOrNothing("temp")
+	os.WriteFile(RelativeToAbsolute("temp"), data, 0644)
+}
+
 func CheckName(acs [][]string, dss [][]string, name string) bool {
 	for _, ac := range acs {
 		if ac[0] == name {

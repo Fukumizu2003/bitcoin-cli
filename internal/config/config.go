@@ -2,10 +2,10 @@ package config
 
 import (
 	"bitcoin-cli/internal/util"
-	"encoding/json"
 	"errors"
 	"os"
-	"path/filepath"
+
+	"github.com/joho/godotenv"
 )
 
 type State struct {
@@ -14,38 +14,41 @@ type State struct {
 	Key     string
 }
 
-type Config struct{}
-
-func ChangeMainAccount(address string) error {
+func SetAccount(name string) (*State, error) {
 	var state State
-	util.MkdirOrNothing("ref")
-	f, _ := os.ReadFile(filepath.Join("ref", "state.json"))
-	json.Unmarshal(f, &state)
 
 	accounts := util.LoadAccounts()
 	flag := false
 	for _, ac := range accounts {
-		if address == ac[1] {
-			state.Address = address
-			state.Name = ac[0]
+		if name == ac[0] {
+			state.Name = name
+			state.Address = ac[1]
 			state.Key = ac[2]
 			flag = true
 			break
 		}
 	}
 	if !flag {
-		return errors.New("このアドレスは登録されていません。")
+		return nil, errors.New("このアカウント名は存在しません。")
 	}
-
-	stateSave, _ := json.MarshalIndent(state, "", "    ")
-	os.WriteFile(filepath.Join("ref", "state.json"), stateSave, 0644)
-
-	return nil
+	return &state, nil
+}
+func GetAccount() *State {
+	godotenv.Load()
+	var state State
+	state.Name = os.Getenv("NAME")
+	state.Address = os.Getenv("ADDRESS")
+	state.Key = os.Getenv("PRIVKEY_ENCRYPTED")
+	return &state
 }
 
-func GetMainAccount() State {
-	var state State
-	f, _ := os.ReadFile(filepath.Join("ref", "state.json"))
-	json.Unmarshal(f, &state)
-	return state
+func SaveConfig(st State) {
+	curr, err := godotenv.Read(".env")
+	if err != nil {
+		curr = make(map[string]string)
+	}
+	curr["NAME"] = st.Name
+	curr["ADDRESS"] = st.Address
+	curr["PRIVKEY_ENCRYPTED"] = st.Key
+	godotenv.Write(curr, ".env")
 }
