@@ -36,9 +36,9 @@ func SetAccount(name string) (*State, error) {
 func GetAccount() *State {
 	godotenv.Load()
 	var state State
-	state.Name = os.Getenv("NAME")
-	state.Address = os.Getenv("ADDRESS")
-	state.Key = os.Getenv("PRIVKEY_ENCRYPTED")
+	state.Name = os.Getenv("NAME_BTC")
+	state.Address = os.Getenv("ADDRESS_BTC")
+	state.Key = os.Getenv("PRIVKEY_ENCRYPTED_BTC")
 	return &state
 }
 
@@ -47,8 +47,8 @@ func SaveConfig(st State) {
 	if err != nil {
 		curr = make(map[string]string)
 	}
-	curr["NAME"] = st.Name
-	curr["ADDRESS"] = st.Address
-	curr["PRIVKEY_ENCRYPTED"] = st.Key
+	curr["NAME_BTC"] = st.Name
+	curr["ADDRESS_BTC"] = st.Address
+	curr["PRIVKEY_ENCRYPTED_BTC"] = st.Key
 	godotenv.Write(curr, ".env")
 }

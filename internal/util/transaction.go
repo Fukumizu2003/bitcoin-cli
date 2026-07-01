@@ -95,11 +95,11 @@ func SaveTx(tx Tx) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	os.WriteFile(RelativeToAbsolute("temp", "transaction.json"), data, 0644)
+	os.WriteFile(RelativeToAbsolute("temp", "BTC_transaction.json"), data, 0644)
 }
 
 func LoadTx() Tx {
-	data, _ := os.ReadFile(RelativeToAbsolute("temp", "transaction.json"))
+	data, _ := os.ReadFile(RelativeToAbsolute("temp", "BTC_transaction.json"))
 	var tx Tx
 	json.Unmarshal(data, &tx)
 	return tx

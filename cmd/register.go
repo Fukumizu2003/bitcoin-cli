@@ -62,10 +62,10 @@ var registerCmd = &cobra.Command{
 			writer := csv.NewWriter(&buf)
 			if acflag {
 				writer.WriteAll(newAcs)
-				os.WriteFile(util.RelativeToAbsolute("ref", "keypair.csv"), buf.Bytes(), 0644)
+				os.WriteFile(util.RelativeToAbsolute("ref", "BTC_keypair.csv"), buf.Bytes(), 0644)
 			} else if deflag {
 				writer.WriteAll(newDss)
-				os.WriteFile(util.RelativeToAbsolute("ref", "destinations.csv"), buf.Bytes(), 0644)
+				os.WriteFile(util.RelativeToAbsolute("ref", "BTC_destinations.csv"), buf.Bytes(), 0644)
 			}
 			return
 		}

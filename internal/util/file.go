@@ -14,7 +14,7 @@ func MkdirOrNothing(dir string) {
 
 func LoadAccounts() [][]string {
 	MkdirOrNothing("ref")
-	f, _ := os.Open(RelativeToAbsolute("ref", "keypair.csv"))
+	f, _ := os.Open(RelativeToAbsolute("ref", "BTC_keypair.csv"))
 	defer f.Close()
 	data, _ := csv.NewReader(f).ReadAll()
 	return data
@@ -22,7 +22,7 @@ func LoadAccounts() [][]string {
 
 func LoadDestinations() [][]string {
 	MkdirOrNothing("ref")
-	f, _ := os.Open(RelativeToAbsolute("ref", "destinations.csv"))
+	f, _ := os.Open(RelativeToAbsolute("ref", "BTC_destinations.csv"))
 	defer f.Close()
 	data, _ := csv.NewReader(f).ReadAll()
 	return data
@@ -48,7 +48,7 @@ func GetAddressFromName(name string) (string, error) {
 
 func LoadUtxos() map[string][]map[string]string {
 	MkdirOrNothing("ref")
-	data, _ := os.ReadFile(RelativeToAbsolute("ref", "utxos.json"))
+	data, _ := os.ReadFile(RelativeToAbsolute("ref", "BTC_utxos.json"))
 	var bn map[string][]map[string]string
 	json.Unmarshal(data, &bn)
 	return bn
@@ -114,7 +114,7 @@ func LoadUtxosHex() map[string][]map[string]string {
 func SaveKeypair(acname string, address string, priv []byte) {
 	MkdirOrNothing("ref")
 	privB64 := B64Encode(priv)
-	f, _ := os.OpenFile(RelativeToAbsolute("ref", "keypair.csv"), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	f, _ := os.OpenFile(RelativeToAbsolute("ref", "BTC_keypair.csv"), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	defer f.Close()
 	row := []byte{}
 	row = append(row, []byte(acname)...)
@@ -128,7 +128,7 @@ func SaveKeypair(acname string, address string, priv []byte) {
 
 func SaveAddress(acname string, address string) {
 	MkdirOrNothing("ref")
-	f, _ := os.OpenFile(RelativeToAbsolute("ref", "destinations.csv"), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	f, _ := os.OpenFile(RelativeToAbsolute("ref", "BTC_destinations.csv"), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	defer f.Close()
 	row := []byte{}
 	row = append(row, []byte(acname)...)
@@ -140,7 +140,7 @@ func SaveAddress(acname string, address string) {
 
 func SaveResp(data []byte) {
 	MkdirOrNothing("temp")
-	os.WriteFile(RelativeToAbsolute("temp"), data, 0644)
+	os.WriteFile(RelativeToAbsolute("temp", "BTC_resp.json"), data, 0644)
 }
 
 func CheckName(acs [][]string, dss [][]string, name string) bool {

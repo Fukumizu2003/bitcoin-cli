@@ -62,7 +62,7 @@ func RefreshUtxos() error {
 		time.Sleep(500 * time.Millisecond)
 	}
 	toSave, _ := json.MarshalIndent(toSaveMap, "", "    ")
-	os.WriteFile(RelativeToAbsolute("ref", "utxos.json"), toSave, 0644)
+	os.WriteFile(RelativeToAbsolute("ref", "BTC_utxos.json"), toSave, 0644)
 	return nil
 }
 
